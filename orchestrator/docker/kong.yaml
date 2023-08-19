@@ -1,0 +1,20 @@
+# a very minimal declarative config file
+_format_version: "2.1"
+_transform: true
+
+services:
+- name: microservice_one
+  url: http://microservice_one
+  routes:
+    - name: microservice_one-service-routes
+      paths:
+        - /microservice_one
+      strip_path: true
+       
+- name: microservice_two
+  url: http://microservice_two
+  routes:
+    - name: microservice_two-service-routes
+      paths:
+        - /microservice_two
+      strip_path: true

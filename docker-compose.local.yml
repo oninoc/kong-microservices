@@ -1,0 +1,30 @@
+networks:
+  kong-net:
+    external: false
+    
+services:
+  redis:
+    image: redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    networks:
+      - kong-net
+      
+  microservice_one:
+    build: ./apps/microservice_one
+    volumes:
+      - "./apps/microservice_one:/app"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--root-path", "/microservice_one"]
+    env_file: .env
+    networks:
+      - kong-net
+
+  microservice_two:
+    build: ./apps/microservice_two
+    volumes:
+      - "./apps/microservice_two:/app"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--root-path", "/microservice_two"]
+    env_file: .env
+    networks:
+      - kong-net
